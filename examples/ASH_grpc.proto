@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+
+message ServerPIPERRequest {
+  string text = 1;
+  string model = 2;
+  float noise_scale = 3;
+  float length_scale = 4;
+  float noise_scale_w = 5;
+  int32 speaker_id = 6;
+  bool auto_rvc = 7;
+}
+
+message ServerPIPERResponse {
+  bytes audio_bytes = 1;
+}
+
+message ServerTTSRequest {
+  string text = 1;
+  string delimiter = 2;
+  string emotion = 3;
+  string prompt = 4;
+  string voice = 5;
+  bytes mic_audio = 6;
+  int32 voice_latents_chunks = 7;
+  int32 candidates = 8;
+  int32 seed = 9;
+  int32 num_autoregressive_samples = 10;
+  int32 diffusion_iterations = 11;
+  float temperature = 12;
+  string diffusion_sampler = 13;
+  int32 breathing_room = 14;
+  float cvvp_weight = 15;
+  float top_p = 16;
+  float diffusion_temperature = 17;
+  float length_penalty = 18;
+  float repetition_penalty = 19;
+  int32 cond_free_k = 20;
+  repeated string experimentals = 21;
+  bytes voice_latents_original_ar = 22;
+  bytes voice_latents_original_diffusion = 23;
+}
+
+message ServerTTSResponse {
+  bytes audio_bytes = 1;
+}
+
+message ServerRVCRequest {
+    int32 sid = 1;
+    bytes audio_bytes = 2;
+    float f0_up_key = 3;
+    string f0_file = 4;
+    string f0_method = 5;
+    string file_index = 6;
+    string file_index2 = 7;
+    float index_rate = 8;
+    int32 filter_radius = 9;
+    int32 resample_sr = 10;
+    int32 rms_mix_rate = 11;
+    float protect = 12;
+    string version = 13;
+    int32 tgt_sr = 14;
+}
+
+message ServerRVCResponse {
+  bytes audio_bytes = 1;
+}
+
+service ServerPIPERService {
+  rpc SynthesizePiper(ServerPIPERRequest) returns (ServerPIPERResponse) {}
+}
+
+service ServerTTSService {
+  rpc SynthesizeTTS(ServerTTSRequest) returns (ServerTTSResponse) {}
+}
+
+service ServerRVCService {
+  rpc ProcessAudio(ServerRVCRequest) returns (ServerRVCResponse) {}
+}
+
