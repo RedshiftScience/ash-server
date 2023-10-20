@@ -2,13 +2,13 @@ RedshiftScience ASH-Server
 
 Combined llama.cpp+piperTTS+MangioRVC in a single docker container
 
-** RTX 3060 example with 13b llama2 **
+**RTX 3060 example with 13b llama2**
 
 
 https://github.com/RedshiftScience/ash-server/assets/61531193/713b7fd6-9215-468e-9b55-db4f89128339
 
 
-** RTX 3090 example with 13b llama2 **
+**RTX 3090 example with 13b llama2**
 
 
 
