@@ -33,7 +33,7 @@ You also need nvidia container toolkit installed for docker if you want to use y
 - ```pip install -r requirements.txt```
 - ```python text-tts-rvc-gen-streaming.py```
 
-There is cli options --time for printing timings and --subtitles to enable a subtitle window.
+There is cli options ```--time``` for printing timings and ```--subtitles``` to enable a subtitle window.
 
 **Tested with**
 
