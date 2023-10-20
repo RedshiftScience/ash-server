@@ -2,9 +2,16 @@ RedshiftScience ASH-Server
 
 Combined llama.cpp+piperTTS+MangioRVC in a single docker container
 
-***Only tested on runpod on a single RTX 3090 and RTX 4090***
+**Tested with**
 
-Tested LLM sizes:
-7B - any quant < q8_0
-13B - any quant < q5_1
+- RTX 3060 12GB VRAM
+  - 7b q4_0, 2048 ctx
+- RTX 3090 24GB VRAM
+  - 13b q6_K 4096 ctx
 
+
+**TODO**
+
+- documentation
+- usage guide
+- finish examples
