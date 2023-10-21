@@ -10,8 +10,8 @@ max_tts_char_cfg = 500
 
 # ip configs
 
-llm_ip_cfg = "127.0.0.1"
-llm_port_cfg = 44332
+llm_ip_cfg = "142.112.54.19"
+llm_port_cfg = 43544
 ttts_ip_cfg = "142.112.54.19"
 ttts_port_cfg = 43472
 piper_ip_cfg = "127.0.0.1"

@@ -3,3 +3,4 @@ grpcio-tools==1.54.2
 aiohttp==3.8.5
 requests==2.31.0
 soundfile==0.12.1
+edge-tts==6.1.8
