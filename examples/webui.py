@@ -1,3 +1,6 @@
+from flask import Flask, render_template, request, send_file
+import os
+
 
 import ash_cfgs
 import grpc
@@ -11,10 +14,8 @@ import soundfile as sf
 import os
 import numpy as np
 import sys
-import playsound
 from tempfile import NamedTemporaryFile
 import edge_tts
-from subtitles import SubtitleWindow
 import asyncio
 import soundfile
 import resampy
@@ -91,10 +92,6 @@ def rvc(bytes,timings=False):
   
     rvc_audio_bytes = rvc_response.audio_bytes
 
-    # save the audio to a wav file
-    rvc_np = np.frombuffer(rvc_audio_bytes, dtype=np.float32)
-    # write
-    sf.write("rvc.wav", rvc_np, 40000)
     return rvc_audio_bytes
 
 
@@ -135,7 +132,10 @@ async def edge(text,timings=False):
     return audio_np.tobytes()
 
 
+# lock = threading.Lock()
+
 def tts(text,stack, timings=False, subtitle_window=None):
+    # with lock:
     # split into sentences using . ? , and !
     sentences = []
     current_sentence = ""
@@ -144,6 +144,10 @@ def tts(text,stack, timings=False, subtitle_window=None):
         if char in [".", "?", "!"]:
             sentences.append(current_sentence)
             current_sentence = ""
+
+    # check if there are no punctuation in the input text
+    if len(sentences) == 0:
+        sentences.append(text)
 
     if stack not in ["piper","edge-tts"]:
         raise ValueError(f"Invalid tts backend: {stack}")
@@ -181,111 +185,42 @@ def tts(text,stack, timings=False, subtitle_window=None):
         audio_bytes_sum += audio_bytes
     if timings:
         print(f"tts: {(time.perf_counter()-start_tts)*1000:.2f} ms")
-    if subtitle_window:
-        subtitle_thread = threading.Thread(target=write_subtitle, args=(subtitle_window,sentences))
-        subtitle_thread.start()
+
 
     # write to a output wav
-    audio_np = np.frombuffer(audio_bytes_sum, dtype=np.float32)
-    # save
-    type_b = 1 if stack == "piper" else 2
-    sf.write(f"output-{type_b}.wav", audio_np, 40000)
-
-    return audio_bytes_sum
-
-def play_audio(audio_bytes):
-    print("playing audio")
-    # play audio in thread
-    with NamedTemporaryFile(suffix=".wav", delete=False) as f:
-        # opena soundfile
-        sf.write(f.name, audio_bytes, 40000)
-        # play audio
-        playsound.playsound(f.name, True)
-        os.unlink(f.name)
-
-def write_subtitle(subtitle_window, texts):
-    time.sleep(0.3)
-    for sentence in texts:
-        subtitle_window.display_progressive_words(sentence, 0.3)
-    time.sleep(0.5)
-    # clear the subtitle window
-    subtitle_window.text_label.config(text="")
-
-def tts_loop(subtitleWindow, backend,timings=False):
-    
-  
-    while True:
-       
-        input_text = input("tts: ")
-        if input_text == "exit":
-            break
-
-        audio_bytes = tts(input_text,stack=backend,timings=timings, subtitle_window=subtitleWindow)
-        audio_np = np.frombuffer(audio_bytes, dtype=np.int16)
-        # write to a wav
-        # play audio in a thread
-        audio_thread = threading.Thread(target=play_audio, args=(audio_np,))
-        audio_thread.start()
-          
+    audio_np = np.frombuffer(audio_bytes_sum, dtype=np.int16)
 
 
+    return audio_np
 
-def tts_wav(text, path, backend ,timings=False):
-    print("timings:")
-    start = time.perf_counter()
-    audio_bytes = tts(text,stack=backend,timings=timings)
-    with sf.SoundFile(path, 'w', samplerate=40000, channels=1, format='wav') as f:
-        # convert to int16
-        audio_bytes = np.frombuffer(audio_bytes, dtype=np.int16)
-        f.write(audio_bytes)
-    end = time.perf_counter()
-    if timings:
-        # in ms
-        print(f"tts to wav: {(end-start)*1000:.2f} ms")        
 
-def main(subtitleWindow,timings=False,):
-    while True:
-        backend = input("backend (piper or edge-tts): ")
-        if backend != "piper" and backend != "edge-tts":
-            print("invalid backend")
-            continue
-        command = input("play (tts) or save as (wav): ")
+app = Flask(__name__)
+import io
+import uuid
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-        if command == "tts":
+@app.route('/synthesize', methods=['POST'])
+def synthesize():
+    text = request.form['text']
+    # Call your TTS function with the provided text here (replace this with your code)
+    # sanitize text, limit to alphanumeric and punctuation
+    text = ''.join([c for c in text if c.isalnum() or c in [' ', '.', '?', '!']])
+    # For example:
+    print(f"tts: {text}")
+    tts_output = tts(text,"piper")
+    # Write the tts_output to a temporary wav file
+    # Save the output to a temporary WAV file
 
-            tts_loop(subtitleWindow,backend,timings=timings)
-        elif command == "wav":
-            text = input("text: ")
-            path = input("output path: ")
-            tts_wav(text, path, backend,timings=timings)
-        elif command == "exit":
-            break
-        else:
-            print("invalid command")
-    sys.exit(0)
+    # in memory file then to binaryIO for send_file
+    memory_file = io.BytesIO()
+    soundfile.write(memory_file, tts_output, 40000, format="WAV")
+    memory_file.seek(0)
+    download_name = uuid.uuid4().hex
+    # Send the temporary WAV file to the user
+    print("sending file")
+    return send_file(memory_file, as_attachment=True, download_name=f"{download_name}.wav", mimetype="audio/wav")
 
-import  argparse    
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--time', action='store_true')
-    parser.add_argument('--subtitles', action='store_true')
-    args = parser.parse_args()
-    subtitle_window = None
-    if args.time:
-        print("timings enabled")
-    if args.subtitles:
-        print("subtitles enabled")
-        subtitle_window = SubtitleWindow()
-  
-        
-    # in a thead
-    main_thread = threading.Thread(target=main, args=(subtitle_window,args.time))
-    main_thread.start()
-    # run the subtitle window
-    if subtitle_window:
-        subtitle_window.run()
-
-    else:
-        while True:
-            time.sleep(1)
-
+if __name__ == '__main__':
+    app.run(host="0.0.0.0",port=5326,debug=False)
