@@ -47,7 +47,13 @@ def piper(text,timings=False):
             # in ms
             print(f"piper: {(end-start)*1000:.2f} ms")
         piper_audio_bytes = piper_response.audio_bytes
-        return piper_audio_bytes
+        # save the audio to a wav file
+        piper_np = np.frombuffer(piper_audio_bytes, dtype=np.float32) # remember to convert from float16 if using half
+        # convert to float32
+        # piper_np = piper_np.astype(np.float32)
+        # write
+        sf.write("piper.wav", piper_np, 22050)
+        return piper_np.tobytes()
 
 
 
@@ -85,7 +91,10 @@ def rvc(bytes,timings=False):
   
     rvc_audio_bytes = rvc_response.audio_bytes
 
-
+    # save the audio to a wav file
+    rvc_np = np.frombuffer(rvc_audio_bytes, dtype=np.float32)
+    # write
+    sf.write("rvc.wav", rvc_np, 40000)
     return rvc_audio_bytes
 
 
@@ -153,6 +162,8 @@ def tts(text,stack, timings=False, subtitle_window=None):
 
     audio_bytes_sum = b""
     # tts each sentence
+    start_tts = time.perf_counter()
+    first = True
     for sentence in sentences:
         audio_bytes = b""
         if stack == "piper":
@@ -163,11 +174,23 @@ def tts(text,stack, timings=False, subtitle_window=None):
             raise ValueError(f"Invalid tts backend: {stack}")
         audio_bytes = rvc(audio_bytes,timings=timings)
 
+        first_tts_time = time.perf_counter()
+        if first:
+            print(f"first tts chunk: {(first_tts_time-start_tts)*1000:.2f} ms")
+            first = False
         audio_bytes_sum += audio_bytes
-
+    if timings:
+        print(f"tts: {(time.perf_counter()-start_tts)*1000:.2f} ms")
     if subtitle_window:
         subtitle_thread = threading.Thread(target=write_subtitle, args=(subtitle_window,sentences))
         subtitle_thread.start()
+
+    # write to a output wav
+    audio_np = np.frombuffer(audio_bytes_sum, dtype=np.int16)
+    # save
+    type_b = 1 if stack == "piper" else 2
+    sf.write(f"output-{type_b}.wav", audio_np, 40000)
+
     return audio_bytes_sum
 
 def play_audio(audio_bytes):
