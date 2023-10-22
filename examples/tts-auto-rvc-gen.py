@@ -188,16 +188,11 @@ def write_subtitle(subtitle_window, texts):
     # clear the subtitle window
     subtitle_window.text_label.config(text="")
 
-def tts_loop(subtitleWindow,timings=False):
+def tts_loop(subtitleWindow, backend,timings=False):
     
   
     while True:
-        backend = input("backend (piper or edge-tts): ")
-        if backend == "exit":
-            break
-        if backend != "piper" and backend != "edge-tts":
-            print("invalid backend")
-            continue
+       
         input_text = input("tts: ")
         if input_text == "exit":
             break
@@ -212,10 +207,10 @@ def tts_loop(subtitleWindow,timings=False):
 
 
 
-def tts_wav(text, path, timings=False):
+def tts_wav(text, path, backend ,timings=False):
     print("timings:")
     start = time.perf_counter()
-    audio_bytes = tts(text,timings=timings)
+    audio_bytes = tts(text,stack=backend,timings=timings)
     with sf.SoundFile(path, 'w', samplerate=40000, channels=1, format='wav') as f:
         # convert to int16
         audio_bytes = np.frombuffer(audio_bytes, dtype=np.int16)
@@ -227,13 +222,19 @@ def tts_wav(text, path, timings=False):
 
 def main(subtitleWindow,timings=False,):
     while True:
+        backend = input("backend (piper or edge-tts): ")
+        if backend != "piper" and backend != "edge-tts":
+            print("invalid backend")
+            continue
         command = input("play (tts) or save as (wav): ")
+
         if command == "tts":
-            tts_loop(subtitleWindow,timings=timings)
+
+            tts_loop(subtitleWindow,backend,timings=timings)
         elif command == "wav":
             text = input("text: ")
             path = input("output path: ")
-            tts_wav(text, path, timings=timings)
+            tts_wav(text, path, backend,timings=timings)
         elif command == "exit":
             break
         else:
