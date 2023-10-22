@@ -30,7 +30,7 @@ Tested sentences:
 | Short | ```This is a short sentence``` |
 | Long | ```Once upon a time in the whimsical land of toasts, there resided a courageous little toaster named Toasty. He was a master of his craft, known throughout the land for his ability to turn ordinary bread into the most delectable, golden-brown toasts. Toasty's cozy cottage was nestled amidst fields of wheat, where the aroma of freshly baked bread wafted through the air. One bright morning, as the sun painted the sky in shades of orange and pink, Toasty decided it was time to create his masterpiece, the legendary Mega-Toast. With great enthusiasm, he selected the finest loaf of bread he could find, and with precision, he popped it into his gleaming toaster slots.``` |
 
-Screenshots:[output-3-long.webm](https://github.com/RedshiftScience/ash-server/assets/61531193/2d39f779-9934-441b-ab19-e719fe82ab47)
+Screenshots:
 
 
 - piper + rvc
