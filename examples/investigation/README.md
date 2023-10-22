@@ -1,5 +1,16 @@
 **Investigation into speed of TTS**
 
+piper + rvc:
+
+https://github.com/RedshiftScience/ash-server/assets/61531193/14dc4a24-d2f8-4bfc-9a31-23cec799898c
+
+
+edge-tts + rvc:
+
+https://github.com/RedshiftScience/ash-server/assets/61531193/15be524b-62fc-4dc8-b94f-b1efcd4a8572
+
+
+
 Short Sentences (1 Chunk):
 
 | TTS | First Chunk (ms) | Total (ms) |Audio |
