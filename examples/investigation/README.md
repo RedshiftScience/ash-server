@@ -16,7 +16,7 @@ Long Sentences (5 Chunks):
 | --- | ----- | ----- | ---- |
 | piper | 168.62 | 804.76 |  |
 | edge-tts | 824.91 | 3550.4 |  |
-| piper + rvc | 1011.96 | 5603.78 | [output-1-short.wav](output-1-long.wav) |
+| piper + rvc | 1011.96 | 5603.78 | [output-1-long.wav](output-1-long.wav) |
 | edge-tts + rvc | 1769.56 | 8609.78 | [output-2-long.wav](output-2-long.wav) |
 | edge-tts + Applio | 2379.64 | 12392.70 |  [output-3-long.wav](output-3-long.wav) |
 
