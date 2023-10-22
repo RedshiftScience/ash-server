@@ -4,11 +4,11 @@ Short Sentences (1 Chunk):
 
 | TTS | First Chunk (ms) | Total (ms) |Audio |
 | --- | ----- | ----- | --- |
-| piper | 149.07 | 149.07 | | 
-| edge-tts | 306.58 | 306.58 | |
+| piper | 149.07 | 149.07 | [piper.wav](piper.wav) | 
+| edge-tts | 306.58 | 306.58 | [edge-tts.wav](edge-tts.wav)  |
 | piper + rvc | 731.24 | 731.26 | [output-1-short.wav](output-1-short.wav) |
 | edge-tts + rvc | 836.44 | 836.44 | [output-1-short.wav](output-2-short.wav) |
-| edge-tts + Applio | 2007.32 |2007.32 | [output-1-short.wav](output-3-short.wav)|
+| edge-tts + Applio | 2007.32 |2007.32 | [output-1-short.wav](output-3-short.wav) |
 
 Long Sentences (5 Chunks):
 
