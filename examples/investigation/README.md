@@ -35,6 +35,13 @@ Screenshots:[output-3-long.webm](https://github.com/RedshiftScience/ash-server/a
 
 - piper + rvc
 
+  
+![output-1-long](https://github.com/RedshiftScience/ash-server/assets/61531193/4335ac69-d219-4fda-b127-0614184c560b)
+
 - edge-tts + rvc
 
+![output-2-long](https://github.com/RedshiftScience/ash-server/assets/61531193/fc44d16b-54d8-4bf6-9c42-6611a82288c8)
+
 - edge-tts + Applio
+
+![output-3-long](https://github.com/RedshiftScience/ash-server/assets/61531193/7b80f06a-46b6-4a5f-83bc-c10d78295aaa)
