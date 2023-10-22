@@ -23,6 +23,22 @@ Long Sentences (5 Chunks):
 
 A "Chunk" means a return of audio from the endpoint, longer sentences are split by punctuation before they are sent to each TTS.
 
+Aria edge-tts vs trains vits piper:
+
+
+
+https://github.com/RedshiftScience/ash-server/assets/61531193/ddc0a6be-0565-4464-80a1-e53af33fce95
+
+
+https://github.com/RedshiftScience/ash-server/assets/61531193/3453cfd8-0b4a-4eec-8e2f-112f534ec0c2
+
+
+https://github.com/RedshiftScience/ash-server/assets/61531193/13fbae4e-a8d0-4d8e-ac83-5da5e9601b58
+
+
+https://github.com/RedshiftScience/ash-server/assets/61531193/736e916b-9c39-4961-9f34-3356a4ad4c55
+
+
 Tested sentences:
 
 | Type | Sentence|
